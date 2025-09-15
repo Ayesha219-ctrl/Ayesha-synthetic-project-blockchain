@@ -1,7 +1,16 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-from sdv.metadata import SingleTableMetadata
+
+# Try correct metadata import
+try:
+    from sdv.metadata import SingleTableMetadata
+except ImportError:
+    # Fallback: older SDV version
+    from sdv.metadata import Metadata as SingleTableMetadata  
+    # Maybe print a warning
+    print("WARNING: Using fallback Metadata class as SingleTableMetadata")
+
 from sdv.single_table import CTGANSynthesizer
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -21,7 +30,6 @@ if uploaded_file is not None:
     st.write("Columns in dataset:", df.columns.tolist())
 
     # Step 2: Drop unneeded columns
-    # Dynamically set default columns that exist in the DataFrame
     possible_defaults = ["ID", "Timestamp"]
     valid_defaults = [col for col in possible_defaults if col in df.columns]
     columns_to_drop = st.multiselect(
@@ -185,4 +193,5 @@ if uploaded_file is not None:
         fig_diff, ax_diff = plt.subplots(figsize=(8,6))
         sns.heatmap(corr_diff, annot=True, cmap="Reds", vmin=0, vmax=1, ax=ax_diff)
         ax_diff.set_title("Correlation Difference Heatmap (Real vs Synthetic)")
+
         st.pyplot(fig_diff)
