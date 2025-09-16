@@ -1,8 +1,0 @@
-pandas
-numpy
-streamlit
-openpyxl
-matplotlib
-seaborn
-scipy
-sdv==1.15.0
